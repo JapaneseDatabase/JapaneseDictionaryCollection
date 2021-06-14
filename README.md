@@ -1,6 +1,13 @@
 # JapaneseDictionaryCollection
 When creating the Japanese Database, it is important to collect up-to-date and accurate information. The purpose of this repository to provide tools to collect Japanese words from trusted, opensource references.
 
+## Install
+This repository mainly runs in python3. The code is currently begin developed in python 3.9, but will likly work in older version. The required modules can be found in requirements.txt.
+
+```
+pip install -r requirements.txt
+```
+
 ## Databases
 Data from the following sources are used to created the our data:
 
