@@ -93,16 +93,44 @@ import os
 '''
 
 def main():
+    '''Example function for using the functions in this fine
+    '''
+    for kana,item in parseEntries(os.path.join('..','data','JMdict_e.xlm')):
+        # Print words with only Kana elements
+        if kana:
+            for word in item.keys():
+                print()
+                print(word + ' (' + ','.join(item[word]['pos']) + '):')
+                for defin in item[word]['def']:
+                    print('\t'+defin)
+
+        # Print words with non-Kana elements  
+        else:
+            for word in item.keys():
+                print()
+                for pronounce in item[word].keys():
+                    print(word + ' [' + pronounce + '] (' + ','.join(item[word][pronounce]['pos']) + '):')
+                    for defin in item[word][pronounce]['def']:
+                        print('\t'+defin)
+
+
+def parseEntries(xlmFile):
+    '''Parses all the entries in a JMdict
+    xlmFile - the file path for the JMdict file
+
+    yields boolean determine if word is only Kana (True) or not (False)
+    yields dictionary for either Kana of non-Kana words
+    '''
     # Load in data and enter the main xml
-    tree = ET.parse(os.path.join('..','data','JMdict_e.xlm'))
+    tree = ET.parse(xlmFile)
     root = tree.getroot()
 
     # Iterate over each root
     for item in entryIter(root):
-        if not isKana(item):
-            print(parseNKana(item))
-            #break
-    #print(curElem)
+        if isKana(item):
+            yield True, parseKana(item)
+        else:
+            yield False, parseNKana(item)
 
 def entryIter(root):
     '''Creates the iterator for the JMdict
@@ -132,7 +160,7 @@ def parseNKana(entry):
     '''Parses an entry that has non-Kana elements
     entry - an entry from the xml
 
-    returns
+    returns a dictionary in the form {word:{pronounce:{definition,part-of-speech}}}
     '''
     wordDict = {}
 
@@ -182,7 +210,36 @@ def parseNKana(entry):
 
     return wordDict
 
-#def get
+def parseKana(entry):
+    '''Parses an entry that has only Kana elements
+    entry - an entry from the xml
+
+    returns a dictionary in the form {word:{definition,part-of-speech}}
+    '''
+    wordDict = {}
+
+    # Iterate over kana
+    # Need to get readable
+    for kele in entry.findall('r_ele'):
+        word_jp = kele.find('reb').text
+        wordDict[word_jp] = {'pos':[], 'def':[]}
+
+    # Iterate over sense
+    # Need to get definition, part-of-speech
+    for sense in entry.findall('sense'):
+        stagr = sense.findall("stagr")
+        if not stagr:
+            stagr = list(wordDict.keys())
+        else:
+            stagr = [stag.text for stag in stagr]
+
+        define = sense.findall('gloss')
+        pos = sense.findall('pos')
+        for sr in stagr:
+            wordDict[sr]['def'] = [item.text for item in define]
+            wordDict[sr]['pos'] = [item.text for item in pos]
+
+    return wordDict
 
 if __name__ == '__main__':
     main()

@@ -36,7 +36,7 @@ def errorDeco(name):
 def loadJMdict():
     ''' Loads the JMdict dataset into the current directory
     '''
-    downloadName = loadDataset('http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz')
+    downloadName = loadDataset('http://ftp.edrdg.org/pub/Nihongo/JMdict_e_examp.gz')
     unzip_gz(downloadName,'.xlm')
     os.remove(downloadName)
 
