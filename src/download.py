@@ -2,6 +2,7 @@ import requests
 import gzip
 import shutil
 import os
+import sys
 
 def loadDataset(url):
     r = requests.get(url)
@@ -32,22 +33,45 @@ def errorDeco(name):
         return wrapper
     return deco
 
-@errorDeco("JMdict",)
+@errorDeco("JMdict")
 def loadJMdict():
-    ''' Loads the JMdict dataset into the current directory
+    ''' Loads the JMdict dataset
     '''
     downloadName = loadDataset('http://ftp.edrdg.org/pub/Nihongo/JMdict_e_examp.gz')
-    unzip_gz(downloadName,'.xlm')
+    unzip_gz(downloadName,'.xml')
+    os.remove(downloadName)
+
+@errorDeco("KANJIDIC")
+def loadKANJIDIC():
+    '''Loads the KANJIDICT dataset 
+    '''
+    downloadName = loadDataset('http://www.edrdg.org/kanjidic/kanjidic2.xml.gz')
+    unzip_gz(downloadName)
     os.remove(downloadName)
 
 if __name__ == '__main__':
+    running = True
     try:
         os.mkdir(os.path.join("..","data"))
-        loadJMdict()
     except FileExistsError:
         conRun = input("File 'data' already exists. Existing files may be overwritten. Continue? [[Y]/n]: ")
         if conRun.lower() in ['n','no']:
             print("Please move/rename 'data' and try again.")
-        else:
-            loadJMdict()
+            running = False
+    
+    if running:
+        try:
+            data = sys.argv[1].lower()
+        except:
+            print("Dataset not specified, so install all")
+            data = 'all'
         
+        if data in ['all','a']:
+            loadJMdict()
+            loadKANJIDIC()
+        elif data in ['jmdict','edict','japanese-multilingual','japanese-multilingual dictionary']:
+            loadJMdict()
+        elif data in ['kanjidic']:
+            loadKANJIDIC()
+        else:
+            print("Dataset specificatio needs to be 'all', 'jmdict', or 'kanjidic")
