@@ -11,8 +11,8 @@ pip install -r requirements.txt
 ## Databases
 Data from the following sources are used to created the our data:
 
-### JMdict/EDICT Japanese/English Dictionary Project
-The goal of this project is to expand on the EDICT Japanese-English dictionary file. The project began in 1991 with the last archive dated on June 2003. The project is led by Jim Breen when it was relocated to the [Electionic Dictionary Research and Development Group](http://www.edrdg.org/).
+### JMdict/EDICT KANJIDIC2 and Japanese/English Dictionary Project
+The goal of that project is to expand on the EDICT Japanese-English dictionary file. The project began in 1991 with the last archive dated on June 2003. The project is led by Jim Breen when it was relocated to the [Electionic Dictionary Research and Development Group](http://www.edrdg.org/).
 
 The files are available under the [Creative Commons Attribution-ShareAlike Licence (V3.0)](https://creativecommons.org/licenses/by-sa/3.0/legalcode).
 
