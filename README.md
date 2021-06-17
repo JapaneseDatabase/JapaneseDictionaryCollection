@@ -8,6 +8,17 @@ This repository mainly runs in python3. The code is currently begin developed in
 pip install -r requirements.txt
 ```
 
+## Using
+
+### Testing
+A test function was provided to ensure that the data could be downloaded and parsed properly. To use this function, simply run the following command:
+
+```
+python test.py
+```
+
+This function will temporarily created a data folder to download each of the used datasets. The datasets will be downloaded, have the first few words printed, then the datafolder will be deleted.
+
 ## Databases
 Data from the following sources are used to created the our data:
 

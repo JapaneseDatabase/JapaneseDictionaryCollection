@@ -7,7 +7,7 @@ import sys
 def loadDataset(url):
     r = requests.get(url)
     if r.status_code == 200:
-        saveName = os.path.join('..','data',url.split('/')[-1])
+        saveName = os.path.join('data',url.split('/')[-1])
         open(saveName,'wb').write(r.content)
         return saveName
     else:
@@ -52,7 +52,7 @@ def loadKANJIDIC():
 if __name__ == '__main__':
     running = True
     try:
-        os.mkdir(os.path.join("..","data"))
+        os.mkdir(os.path.join("data"))
     except FileExistsError:
         conRun = input("File 'data' already exists. Existing files may be overwritten. Continue? [[Y]/n]: ")
         if conRun.lower() in ['n','no']:

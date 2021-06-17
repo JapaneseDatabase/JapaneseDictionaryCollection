@@ -176,13 +176,13 @@ def getMisc(misc):
         variants.append([item.get("var_type"), item.text])
 
     grade = misc.find('grade')
-    if grade:
+    if grade is not None:
         grade = grade.text
     frequency = misc.find('freq')
-    if frequency:
+    if frequency is not None:
         frequency = frequency.text
     jlpt = misc.find('jlpt')
-    if jlpt:
+    if jlpt is not None:
         jlpt = jlpt.text
 
     return grade, misc.find('stroke_count').text, variants, frequency, jlpt
