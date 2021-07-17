@@ -100,13 +100,13 @@ import os
 def main():
     '''Example function for using the functions in this form
     '''
-    for kana,item in parseEntries(os.path.join('..','data','JMdict_e_examp.xml')):
+    for kana,item in parseEntries(os.path.join('.','data','JMdict_e_examp.xml')):
         # Print words with only Kana elements
         if kana:
             for word in item.keys():
                 print()
-                print(word + ' (' + ','.join(item[word]['pos']) + '):')
-                for defin in item[word]['def']:
+                print(word + ' (' + ','.join(item[word]['part_of_speech']) + '):')
+                for defin in item[word]['phrases'].keys():
                     print('\t'+defin)
 
         # Print words with non-Kana elements  
@@ -114,8 +114,8 @@ def main():
             for word in item.keys():
                 print()
                 for pronounce in item[word].keys():
-                    print(word + ' [' + pronounce + '] (' + ','.join(item[word][pronounce]['pos']) + '):')
-                    for defin in item[word][pronounce]['def']:
+                    print(word + ' [' + pronounce + '] (' + ','.join(item[word][pronounce]['part_of_speech']) + '):')
+                    for defin in item[word][pronounce]['phrases'].keys():
                         print('\t'+defin)
 
 # Interpret XML Parts
@@ -259,7 +259,12 @@ def parseNKana(entry):
     '''Parses an entry that has non-Kana elements
     entry - an entry from the xml
 
-    returns a dictionary in the form {word:{pronounce:{definition,part-of-speech}}}
+    returns a dictionary in the form 
+        {word: {pronounce: {
+            'synonyms', 'antonyms', 'part_of_speech', 'fields', 'info_def',
+            'source', 'dialects', 'phrases', 'association', 'sensory', 'examples',
+            'info_word', 'record'
+        }}}
     '''
     wordDict = {}
 
@@ -278,7 +283,11 @@ def parseNKana(entry):
             restrict = list(wordDict.keys())
 
         for r in restrict:
-            wordDict[r][word_jp] = {'pos':[], 'def':[]}
+            wordDict[r][word_jp] = {
+                'synonyms':[], 'antonyms':[], 'part_of_speech':[], 'fields':[], 'info_def':[],
+                'source':{}, 'dialects':[], 'phrases':{}, 'association':[], 'sensory':[], 'examples':[],
+                'info_word':infList, 'record':priList
+            }
 
     # Iterate over sense
     # Need to get definition, part-of-speech
@@ -296,8 +305,17 @@ def parseNKana(entry):
         for kstag in kRestrict:
             for rstag in rRestrict:
                 if rstag in wordDict[kstag].keys():
-                    wordDict[kstag][rstag]['def'] = list(glossList.keys())
-                    wordDict[kstag][rstag]['pos'] = posList
+                    wordDict[kstag][rstag]['synonyms'].extend(xref)
+                    wordDict[kstag][rstag]['antonyms'].extend(ant)
+                    wordDict[kstag][rstag]['part_of_speech'].extend(posList)
+                    wordDict[kstag][rstag]['fields'].extend(fieldList)
+                    wordDict[kstag][rstag]['info_def'].extend(mscList)
+                    wordDict[kstag][rstag]['source'].update(lsourceList)
+                    wordDict[kstag][rstag]['dialects'].extend(dialList)
+                    wordDict[kstag][rstag]['phrases'].update(glossList)
+                    wordDict[kstag][rstag]['association'].extend(priList)
+                    wordDict[kstag][rstag]['sensory'].extend(infList)
+                    wordDict[kstag][rstag]['examples'].extend(exampleList)
 
     return wordDict
 
@@ -305,18 +323,26 @@ def parseKana(entry):
     '''Parses an entry that has only Kana elements
     entry - an entry from the xml
 
-    returns a dictionary in the form {word:{definition,part-of-speech}}
+    returns a dictionary in the form
+        {word: {
+            'synonyms', 'antonyms', 'part_of_speech', 'fields', 'info_def',
+            'source', 'dialects', 'phrases', 'association', 'sensory', 'examples',
+            'info_word', 'record'
+        }}}
     '''
     wordDict = {}
 
     # Iterate over kana
-    # Need to get readable
+    # Only contains readable
     for item in entry.findall('r_ele'):
         word_jp, _, _, infList, priList = getREle(item)
-        wordDict[word_jp] = {'pos':[], 'def':[]}
+        wordDict[word_jp] = {
+                'synonyms':[], 'antonyms':[], 'part_of_speech':[], 'fields':[], 'info_def':[],
+                'source':{}, 'dialects':[], 'phrases':{}, 'association':[], 'sensory':[], 'examples':[],
+                'info_word':infList, 'record':priList
+            }
 
     # Iterate over sense
-    # Need to get definition, part-of-speech
     for item in entry.findall('sense'):
         _, rRestrict, xref, ant, posList, fieldList, mscList, lsourceList, \
             dialList, glossList, priList, infList, exampleList = getSense(item)
@@ -325,8 +351,17 @@ def parseKana(entry):
             rRestrict = list(wordDict.keys())
 
         for rstag in rRestrict:
-            wordDict[rstag]['def'] = list(glossList.keys())
-            wordDict[rstag]['pos'] = posList
+            wordDict[rstag]['synonyms'].extend(xref)
+            wordDict[rstag]['antonyms'].extend(ant)
+            wordDict[rstag]['part_of_speech'].extend(posList)
+            wordDict[rstag]['fields'].extend(fieldList)
+            wordDict[rstag]['info_def'].extend(mscList)
+            wordDict[rstag]['source'].update(lsourceList)
+            wordDict[rstag]['dialects'].extend(dialList)
+            wordDict[rstag]['phrases'].update(glossList)
+            wordDict[rstag]['association'].extend(priList)
+            wordDict[rstag]['sensory'].extend(infList)
+            wordDict[rstag]['examples'].extend(exampleList)
 
     return wordDict
 
