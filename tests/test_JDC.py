@@ -2,7 +2,8 @@ import unittest
 from os import mkdir
 from shutil import rmtree
 
-from src.JapaneseDownload.download import *
+from src.JapaneseDownload.download import loadJMdict, loadKANJIDIC
+
 
 class downloadTests(unittest.TestCase):
     '''Used to ensure that the datasets can be downloaded

@@ -1,39 +1,7 @@
-#TODO: Parsing functions only return parts of what we need, may need to create class for better structuring
-import xml.etree.ElementTree as ET
 import os
+import xml.etree.ElementTree as ET
 
-''' Example entry [0]
-<entry>
-    <ent_seq>1000000</ent_seq>
-    <r_ele>
-        <reb>ヽ</reb>
-    </r_ele>
-    <sense>
-        <pos>&unc;</pos>
-        <xref>一の字点</xref>
-        <gloss g_type="expl">repetition mark in katakana</gloss>
-    </sense>
-</entry>
-'''
-''' Example entry
-<entry>
-    <ent_seq>2406710</ent_seq>
-    <k_ele>
-        <keb>直</keb>
-    </k_ele>
-    <r_ele>
-        <reb>ただ</reb>
-    </r_ele>
-    <sense>
-        <pos>&adj-na;</pos>
-        <pos>&n;</pos>
-        <pos>&adv;</pos>
-        <misc>&arch;</misc>
-        <gloss>straight</gloss>
-        <gloss>direct</gloss>
-    </sense>
-</entry>
-'''
+
 ''' Structure
 <entry> # Contains the list of elements
     <ent_seq> # The sequence number of the entry
@@ -100,7 +68,7 @@ import os
 def main():
     '''Example function for using the functions in this form
     '''
-    for kana,item in parseEntries(os.path.join('.','data','JMdict_e_examp.xml')):
+    for kana, item in parseEntries(os.path.join('.', 'data', 'JMdict_e_examp.xml')):
         # Print words with only Kana elements
         if kana:
             for word in item.keys():
@@ -109,7 +77,7 @@ def main():
                 for defin in item[word]['phrases'].keys():
                     print('\t'+defin)
 
-        # Print words with non-Kana elements  
+        # Print words with non-Kana elements
         else:
             for word in item.keys():
                 print()
@@ -149,7 +117,8 @@ def getREle(r_ele):
     '''Parses everything in the r_ele entry
     r_ele - an r_ele element from the xml
 
-    returns the reading, if it is the true reading of a kanji, list of nonKana elements it apply to (empty if all), list of reading information, list of record information
+    returns the reading, if it is the true reading of a kanji, list of nonKana elements it apply to (empty if all),
+        list of reading information, list of record information
     '''
     trueKanji = not r_ele.find('re_nokanji')
 
@@ -196,14 +165,14 @@ def getSense(sense):
         lang = item.get('xlm:lang')
         lstype = item.get('ls_type')
         wasei = item.get('ls_wasei')
-        lsourceList[lsource]={'lang':lang, 'type':lstype, 'wasei':wasei}
+        lsourceList[lsource] = {'lang': lang, 'type': lstype, 'wasei': wasei}
 
     glossList = {}
     for item in sense.findall('gloss'):
         gloss = item.text
         lang = item.get('xml:lang')
         gend = item.get('g_gend')
-        glossList[gloss] = {'lang':lang, 'gender':gend}
+        glossList[gloss] = {'lang': lang, 'gender': gend}
 
     exampleList = [getExample(item) for item in sense.findall('example')]
 
@@ -259,7 +228,7 @@ def parseNKana(entry):
     '''Parses an entry that has non-Kana elements
     entry - an entry from the xml
 
-    returns a dictionary in the form 
+    returns a dictionary in the form
         {word: {pronounce: {
             'synonyms', 'antonyms', 'part_of_speech', 'fields', 'info_def',
             'source', 'dialects', 'phrases', 'association', 'sensory', 'examples',
@@ -278,15 +247,15 @@ def parseNKana(entry):
     # Need to get reading
     for item in entry.findall('r_ele'):
         word_jp, trueKanji, restrict, infList, priList = getREle(item)
-        
+
         if not restrict:
             restrict = list(wordDict.keys())
 
         for r in restrict:
             wordDict[r][word_jp] = {
-                'synonyms':[], 'antonyms':[], 'part_of_speech':[], 'fields':[], 'info_def':[],
-                'source':{}, 'dialects':[], 'phrases':{}, 'association':[], 'sensory':[], 'examples':[],
-                'info_word':infList, 'record':priList
+                'synonyms': [], 'antonyms': [], 'part_of_speech': [], 'fields': [], 'info_def': [],
+                'source': {}, 'dialects': [], 'phrases': {}, 'association': [], 'sensory': [], 'examples': [],
+                'info_word': infList, 'record': priList
             }
 
     # Iterate over sense
@@ -337,10 +306,10 @@ def parseKana(entry):
     for item in entry.findall('r_ele'):
         word_jp, _, _, infList, priList = getREle(item)
         wordDict[word_jp] = {
-                'synonyms':[], 'antonyms':[], 'part_of_speech':[], 'fields':[], 'info_def':[],
-                'source':{}, 'dialects':[], 'phrases':{}, 'association':[], 'sensory':[], 'examples':[],
-                'info_word':infList, 'record':priList
-            }
+            'synonyms': [], 'antonyms': [], 'part_of_speech': [], 'fields': [], 'info_def': [],
+            'source': {}, 'dialects': [], 'phrases': {}, 'association': [], 'sensory': [], 'examples': [],
+            'info_word': infList, 'record': priList
+        }
 
     # Iterate over sense
     for item in entry.findall('sense'):
@@ -364,6 +333,7 @@ def parseKana(entry):
             wordDict[rstag]['examples'].extend(exampleList)
 
     return wordDict
+
 
 if __name__ == '__main__':
     main()
