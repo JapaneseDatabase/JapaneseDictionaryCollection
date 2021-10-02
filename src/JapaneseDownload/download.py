@@ -51,6 +51,22 @@ def loadKANJIDIC():
     unzip_gz(downloadName)
     os.remove(downloadName)
 
+@errorDeco("RADKFILE")
+def loadRADKFILE():
+    '''Loads the RADFILE dataset
+    '''
+    downloadName = loadDataset('http://ftp.usf.edu/pub/ftp.monash.edu.au/pub/nihongo/radkfile.gz')
+    unzip_gz(downloadName)
+    os.remove(downloadName)
+
+@errorDeco("KRADFILE")
+def loadKRADFILE():
+    '''Loads the RADFILE dataset
+    '''
+    downloadName = loadDataset('http://ftp.usf.edu/pub/ftp.monash.edu.au/pub/nihongo/kradfile.gz')
+    unzip_gz(downloadName)
+    os.remove(downloadName)
+
 
 if __name__ == '__main__':
     running = True
@@ -73,9 +89,15 @@ if __name__ == '__main__':
         if data in ['all', 'a']:
             loadJMdict()
             loadKANJIDIC()
+            loadRADKFILE()
+            loadKRADFILE()
         elif data in ['jmdict', 'edict', 'japanese-multilingual', 'japanese-multilingual dictionary']:
             loadJMdict()
         elif data in ['kanjidic']:
             loadKANJIDIC()
+        elif data in ['radkfile']:
+            loadRADKFILE()
+        elif data in ['kradfile']:
+            loadKRADFILE()
         else:
-            print("Dataset specificatio needs to be 'all', 'jmdict', or 'kanjidic")
+            print("Dataset specificatio needs to be 'all', 'jmdict', 'kanjidic', 'radkfile', or 'kradfile'")
