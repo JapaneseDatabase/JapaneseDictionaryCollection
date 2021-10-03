@@ -4,7 +4,7 @@ import os
 def main():
     '''Example function for using the functions in this form
     '''
-    for kanji, radical in parseKRad(os.path.join('..', 'data', 'kradfile')):
+    for kanji, radical in parseKRad(os.path.join('data', 'kradzip', 'kradfile')):
         print(kanji)
         print(radical)
         print()

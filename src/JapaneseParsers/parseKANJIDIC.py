@@ -34,7 +34,7 @@ import xml.etree.ElementTree as ET
 def main():
     '''Example function for using the functions in this form
     '''
-    for kanjiItem in parseCharacter(os.path.join('..', 'data', 'kanjidic2.xml')):
+    for kanjiItem in parseCharacter(os.path.join('data', 'kanjidic2.xml')):
         print(kanjiItem[0])
         print('\tOnyomi:  ' + ', '.join(kanjiItem[15]))
         print('\tKunyomi: ' + ', '.join(kanjiItem[16]))

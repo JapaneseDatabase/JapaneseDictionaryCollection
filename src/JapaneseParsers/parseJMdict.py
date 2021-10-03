@@ -68,7 +68,7 @@ import xml.etree.ElementTree as ET
 def main():
     '''Example function for using the functions in this form
     '''
-    for kana, item in parseEntries(os.path.join('.', 'data', 'JMdict_e_examp.xml')):
+    for kana, item in parseEntries(os.path.join('data', 'JMdict_e_examp.xml')):
         # Print words with only Kana elements
         if kana:
             for word in item.keys():
