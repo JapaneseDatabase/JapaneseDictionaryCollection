@@ -6,7 +6,7 @@ import sys
 import requests
 
 import deprecation
-from __version import __version__
+from .__version import __version__
 
 
 # Utility functions

@@ -2,7 +2,7 @@ import unittest
 from os import mkdir
 from shutil import rmtree
 
-from src.JapaneseDownload.download import loadJMdict, loadKANJIDIC
+from src.JapaneseDownload.download import loadJMdict, loadKANJIDIC, loadRadicals
 
 
 class downloadTests(unittest.TestCase):
@@ -33,6 +33,16 @@ class downloadTests(unittest.TestCase):
             print("Successfully downloaded the KANJI dataset")
         except Exception as e:
             print("Was unsuccessful loading KANJI")
+            raise e
+    
+    def test_RadicalsLoad(self):
+        '''Tests that the kradzip folder is loaded properly
+        '''
+        try:
+            loadRadicals()
+            print("Successfully downloaded the radical folder")
+        except Exception as e:
+            print("Was unsuccessful loading radicals")
             raise e
 
 
