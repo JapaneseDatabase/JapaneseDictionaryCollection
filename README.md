@@ -1,11 +1,11 @@
 # JapaneseDictionaryCollection
-When creating the Japanese Database, it is important to collect up-to-date and accurate information. The purpose of this repository to provide tools to collect Japanese words from trusted, opensource references.
+When creating the Japanese Database, it is important to collect up-to-date and complete information. The purpose of this repository to provide tools to collect Japanese words from trusted, opensource references.
 
 ## Install
-This repository mainly runs in python3. The code is currently begin developed in python 3.9, but will likly work in older version. The required modules can be found in requirements.txt.
+This repository is created for python3 >=3.8. The code is currently begin developed in python 3.9, but will likly work in older version. To install, build from the one of the provided sources. For example:
 
 ```
-pip install -r requirements.txt
+pip install Japanese_Dictionary_Collector-__VERSION__-py3-none-any.whl
 ```
 
 ## Using
@@ -19,8 +19,8 @@ These function will temporarily created a data folder to download each of the us
 Data from the following sources are used to created the our data:
 
 ### JMdict/EDICT KANJIDIC2 and Japanese/English Dictionary Project
-The goal of that project is to expand on the EDICT Japanese-English dictionary file. The project began in 1991 with the last archive dated on June 2003. The project is led by Jim Breen when it was relocated to the [Electionic Dictionary Research and Development Group](http://www.edrdg.org/).
+A collection of Japanese-English translations created by Jim Breen and is being managed by the [Electionic Dictionary Research and Development Group (EDRDG)](http://www.edrdg.org/).
 
 The files are available under the [Creative Commons Attribution-ShareAlike Licence (V3.0)](https://creativecommons.org/licenses/by-sa/3.0/legalcode).
 
-This publication has included material from the JMdict and KANJIDIC dictionary files in accordance with the licence provisions of the [Electronic Dictionaries Research Group](http://www.edrdg.org/).
+The JMdict is a collection of over 170,000 Japanese/English words. KanjiDic is a collection of Kanji including readings, meaning, and metadata. RADKFILE is a database of Kanji and the radicals that make them.

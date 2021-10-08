@@ -36,6 +36,8 @@ def errorDeco(name):
         def wrapper():
             try:
                 print("Attempting to load the {}".format(name))
+                if not os.path.exists('data'):
+                    os.mkdir('data')
                 func()
                 print("Successfully loaded {}".format(name))
             except Exception as e:
@@ -61,10 +63,10 @@ def loadKANJIDIC():
     unzip_gz(downloadName)
     os.remove(downloadName)
 
+@errorDeco("RADKFILE")
 @deprecation.deprecated(deprecated_in="0.0",
                         current_version=__version__,
                         details="Use Radicals instead")
-@errorDeco("RADKFILE")
 def loadRADKFILE():
     '''Loads the RADKFILE dataset as radkfile
     '''
@@ -72,10 +74,10 @@ def loadRADKFILE():
     unzip_gz(downloadName)
     os.remove(downloadName)
 
+@errorDeco("KRADFILE")
 @deprecation.deprecated(deprecated_in="0.0", removed_in="1.0",
                         current_version=__version__,
                         details="Use Radicals instead")
-@errorDeco("KRADFILE")
 def loadKRADFILE():
     '''Loads the KRADFILE dataset as kradfile
     '''

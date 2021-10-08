@@ -34,7 +34,7 @@ class downloadTests(unittest.TestCase):
         except Exception as e:
             print("Was unsuccessful loading KANJI")
             raise e
-    
+
     def test_RadicalsLoad(self):
         '''Tests that the kradzip folder is loaded properly
         '''
