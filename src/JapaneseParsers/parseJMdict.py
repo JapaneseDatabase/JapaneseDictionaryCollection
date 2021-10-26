@@ -1,5 +1,6 @@
 import os
 import xml.etree.ElementTree as ET
+import util_parse
 
 
 ''' Structure
@@ -68,7 +69,7 @@ import xml.etree.ElementTree as ET
 def main():
     '''Example function for using the functions in this form
     '''
-    for kana, item in parseEntries(os.path.join('data', 'JMdict_e_examp.xml')):
+    for kana, item in parseEntries(os.path.join('data', 'JMdict_e_examp.xml'), True):
         # Print words with only Kana elements
         if kana:
             for word in item.keys():
@@ -206,9 +207,11 @@ def isKana(entry):
     return entry.find("k_ele") is None
 
 # Parsing Functions
-def parseEntries(xlmFile):
+def parseEntries(xlmFile, remove_archaic = False, filter = False):
     '''Parses all the entries in a JMdict
     xlmFile - the file path for the JMdict file
+    remove_archaic - boolean to remove archaic entries (True) or not (False) (default False)
+    filter - boolean to remove inappropriate entries (True) or not (False) (default False)
 
     yields boolean determine if word is only Kana (True) or not (False)
     yields dictionary for either Kana of non-Kana words
@@ -220,9 +223,50 @@ def parseEntries(xlmFile):
     # Iterate over each root
     for item in getEntryIter(root):
         if isKana(item):
-            yield True, parseKana(item)
+            kana = True
+            resultDic = parseKana(item)
         else:
-            yield False, parseNKana(item)
+            kana = False
+            resultDic = parseNKana(item)
+
+        # Remove archaic
+        if remove_archaic:
+            badword = []
+            for word in resultDic.keys():
+                if kana:
+                    for pos in resultDic[word]['part_of_speech']:
+                        if 'archaic' in pos:
+                            badword.append(word)
+                            break
+                else:
+                    badpro = []
+                    for pronounce in resultDic[word].keys():
+                        for pos in resultDic[word][pronounce]['part_of_speech']:
+                            print(pos)
+                            if 'archaic' in pos:
+                                badpro.append(pronounce)
+                                break
+                    util_parse.deleteFromDictionary(resultDic[word], badpro)
+            util_parse.deleteFromDictionary(resultDic, badword)
+
+        # Filter entries
+        if filter:
+            badword = []
+            for word in resultDic.keys():
+                if kana:
+                    if 'rude or X-rated term (not displayed in educational software)' in resultDic[word]['info_def']:
+                        badword.append(word)
+                else:
+                    badpro = []
+                    for pronounce in resultDic[word].keys():
+                        if 'rude or X-rated term (not displayed in educational software)' in resultDic[word][pronounce]['info_def']:        
+                            badpro.append(pronounce)
+                    util_parse.deleteFromDictionary(resultDic[word], badpro)
+            util_parse.deleteFromDictionary(resultDic, badword)
+
+        # Check if empty
+        if resultDic:
+            yield kana, resultDic
 
 def parseNKana(entry):
     '''Parses an entry that has non-Kana elements
